@@ -40,7 +40,6 @@ def get_weather_data(city, coords):
     with open(file_path, 'w') as output_file:
         df.to_csv(output_file, index=False)
 
-    return 1
 
 
 # Ciudades y coordenadas:
