@@ -7,20 +7,26 @@ from datetime import datetime
 from config import password
 
 def get_weather_data(city, coords):
-    """Esta función busca los datos de las ciudades y coordenadas que se le pasa por parámetro"""
-    BASE_URL = "'https://api.openweathermap.org/data/2.5/weather"
+    """Esta función busca los datos de las ciudades y 
+    coordenadas que se le pasa por parámetro y los guarda
+    en un archivo con formato csv"""
+
+    # Endpoint de OpenWeatherMap:
+    BASE_URL = "https://api.openweathermap.org/data/2.5/weather?"
     api_key = password
 
     # La URL completa con las coordenadas:
-    url = f"{BASE_URL}{coords}&q={city}&appid={api_key}"
+    url = f"{BASE_URL}{coords}&appid={api_key}"
 
-    # Realizar la una solicitud HTTP a la API y recibir los datos en formato JSON:
+    # Realizar la una solicitud HTTP a la API:
     response = requests.get(url)
+    
+    # Verificar si la solicitud fue exitosa:
     if response.status_code == 200:
         data = response.json()
-
         # Convertir los datos JSON a un DataFrame de pandas:
         df = json_normalize(data)
+    
     else:
         print(f"No se pudieron obtener los datos del clima de {city}")
 
@@ -28,7 +34,7 @@ def get_weather_data(city, coords):
     current_date = datetime.now().strftime("%Y-%m-%d")
 
     # Definir la ruta y nombre del archivo CSV donde se almacenarán los datos:
-    file_path = f"{city.lower()}_{current_date}.csv"
+    file_path = f"weather_data/{city.lower()}_{current_date}.csv".replace(" ", "_")
 
     # Guardas los datos en formato CSV:
     with open(file_path, 'w') as output_file:
